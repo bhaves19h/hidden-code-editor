@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hidden C Code Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .hidden-input-area {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            padding: 10px;
+            font-family: monospace;
+            resize: none;
+            z-index: 2;
+        }
+        .input-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            z-index: 1;
+        }
+        .code-display {
+            width: 100%;
+            min-height: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            display: none;
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .status {
+            margin-top: 10px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hidden C Code Editor</h1>
+        
+        <p>Type your C code in the box below. Your input will be completely invisible as you type.</p>
+        
+        <div class="hidden-input-area" id="inputArea">
+            <div class="input-placeholder" id="placeholder">Click here and start typing (your input will be invisible)</div>
+            <textarea id="codeInput" placeholder="Enter your C code here..."></textarea>
+        </div>
+        
+        <div class="buttons">
+            <button id="startEditing">New Code</button>
+            <button id="showCode">Show Code</button>
+        </div>
+        
+        <div class="status" id="status">Click in the gray area to start typing. Your input will be invisible.</div>
+        
+        <div class="code-display" id="codeDisplay"></div>
+    </div>
+
+    <script>
+        const codeInput = document.getElementById('codeInput');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const startEditingBtn = document.getElementById('startEditing');
+        const showCodeBtn = document.getElementById('showCode');
+        const statusElement = document.getElementById('status');
+        const placeholder = document.getElementById('placeholder');
+        
+        // When the textarea gets focus, hide the placeholder
+        codeInput.addEventListener('focus', function() {
+            placeholder.style.display = 'none';
+            statusElement.textContent = 'Typing mode: Your code is being entered but is invisible.';
+        });
+        
+        // When the textarea loses focus and is empty, show the placeholder
+        codeInput.addEventListener('blur', function() {
+            if (codeInput.value === '') {
+                placeholder.style.display = 'block';
+            }
+        });
+        
+        // Handle input to update status
+        codeInput.addEventListener('input', function() {
+            if (codeInput.value.length > 0) {
+                statusElement.textContent = 'Typing mode: Your code is being entered but is invisible. Characters typed: ' + codeInput.value.length;
+            } else {
+                statusElement.textContent = 'Typing mode: Your code is being entered but is invisible.';
+            }
+        });
+        
+        startEditingBtn.addEventListener('click', function() {
+            codeInput.value = '';
+            codeDisplay.style.display = 'none';
+            placeholder.style.display = 'block';
+            statusElement.textContent = 'Ready to type new code. Your input will be invisible.';
+            codeInput.focus();
+        });
+        
+        showCodeBtn.addEventListener('click', function() {
+            if (codeInput.value.trim() === '') {
+                statusElement.textContent = 'No code to display. Please type some code first.';
+                return;
+            }
+            codeDisplay.style.display = 'block';
+            codeDisplay.textContent = codeInput.value;
+            statusElement.textContent = 'Code is now visible.';
+        });
+    </script>
+</body>
+</html>
